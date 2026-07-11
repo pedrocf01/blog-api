@@ -2,7 +2,9 @@ package com.pedrocf01.blog_api.entity;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -15,9 +17,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -26,6 +33,17 @@ import jakarta.persistence.Table;
 @Table(name = "posts")
 @EntityListeners(AuditingEntityListener.class)
 public class Post {
+
+    public Post(){
+    }
+
+    public Post(String title, String slug, String excerpt, String content, String coverImage) {
+        this.title = title;
+        this.slug = slug;
+        this.excerpt = excerpt;
+        this.content = content;
+        this.coverImage = coverImage;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,8 +74,18 @@ public class Post {
     @Column(name = "views_count", nullable = false)
     private Long viewsCount = 0L;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "post_likes",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> likedBy = new HashSet<>();
 
     @Column(name = "published_at")
     private Instant publishedAt;
@@ -70,16 +98,7 @@ public class Post {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    public Post(){
-    }
-
-    public Post(String title, String slug, String excerpt, String content, String coverImage) {
-        this.title = title;
-        this.slug = slug;
-        this.excerpt = excerpt;
-        this.content = content;
-        this.coverImage = coverImage;
-    }
+    
 
     @PrePersist
     public void prePersist() {
