@@ -9,8 +9,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import com.pedrocf01.blog_api.entity.Comment;
 import com.pedrocf01.blog_api.entity.Post;
-import com.pedrocf01.blog_api.repositories.CommentRepository;
-import com.pedrocf01.blog_api.repositories.PostRepository;
+import com.pedrocf01.blog_api.entity.User;
+import com.pedrocf01.blog_api.repository.CommentRepository;
+import com.pedrocf01.blog_api.repository.PostRepository;
+import com.pedrocf01.blog_api.repository.UserRepository;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -21,9 +23,13 @@ public class BlogApiApplication {
 	}
 
 	@Bean
-	ApplicationRunner runner(PostRepository postRepository, CommentRepository commentRepository) {
+	ApplicationRunner runner(PostRepository postRepository, CommentRepository commentRepository, 
+							 UserRepository userRepository) {
+
 		return args -> {
-			Post post = new Post("My post", "my-post", "A simple post", "A regular post", "image.com/image");
+			User user = new User("pedro", "pedro@gmail.com", "password", "Pedro Cordeiro");
+			userRepository.save(user);
+			Post post = new Post("My post", "my-post", "A simple post", "A regular post", "image.com/image", Post.PostStatus.PUBLISHED, user);
 			postRepository.save(post);
 			Comment comment = new Comment("My comment", post);
 			commentRepository.save(comment);

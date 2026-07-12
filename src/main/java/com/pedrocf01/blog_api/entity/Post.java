@@ -37,12 +37,14 @@ public class Post {
     public Post(){
     }
 
-    public Post(String title, String slug, String excerpt, String content, String coverImage) {
+    public Post(String title, String slug, String excerpt, String content, String coverImage, PostStatus status, User author) {
         this.title = title;
         this.slug = slug;
         this.excerpt = excerpt;
         this.content = content;
         this.coverImage = coverImage;
+        this.status = status;
+        this.author = author;
     }
 
     @Id
@@ -98,7 +100,9 @@ public class Post {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    
+    public int getLikesCount() {
+        return likedBy.size();
+    }
 
     @PrePersist
     public void prePersist() {
@@ -189,6 +193,14 @@ public class Post {
 
     public void setViewsCount(Long viewsCount) {
         this.viewsCount = viewsCount;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public List<Comment> getComments() {
