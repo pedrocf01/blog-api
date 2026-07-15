@@ -22,17 +22,17 @@ public class BlogApiApplication {
 		SpringApplication.run(BlogApiApplication.class, args);
 	}
 
-	@Bean
-	ApplicationRunner runner(PostRepository postRepository, CommentRepository commentRepository, 
-							 UserRepository userRepository) {
+	// @Bean
+	// ApplicationRunner runner(PostRepository postRepository, CommentRepository commentRepository, 
+	// 						 UserRepository userRepository) {
 
-		return args -> {
-			User user = new User("pedro", "pedro@gmail.com", "password", "Pedro Cordeiro");
-			userRepository.save(user);
-			Post post = new Post("My post", "my-post", "A simple post", "A regular post", "image.com/image", Post.PostStatus.PUBLISHED, user);
-			postRepository.save(post);
-			Comment comment = new Comment("My comment", post);
-			commentRepository.save(comment);
-		};
-	}
+	// 	return args -> {
+	// 		User user = new User("pedro", "pedro@gmail.com", "password", "Pedro Cordeiro");
+	// 		userRepository.save(user);
+	// 		Post post = new Post("My post", "my-post", "A simple post", "A regular post", "image.com/image", Post.PostStatus.PUBLISHED, user);
+	// 		postRepository.save(post);
+	// 		Comment comment = new Comment("My comment", post);
+	// 		commentRepository.save(comment);
+	// 	};
+	// }
 }
