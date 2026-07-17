@@ -23,4 +23,16 @@ public record RegisterRequest(
     @Size(max = 100, message = "Full name must be under 100 characters")
     String fullName
 ) 
-{}
+{
+    public RegisterRequest withEmail(String email) {
+        return new RegisterRequest(this.username, email, this.password, this.fullName);
+    }
+
+    public RegisterRequest withPassword(String password) {
+        return new RegisterRequest(this.username, this.email, password, this.fullName);
+    }
+
+    public RegisterRequest withUsername(String username) {
+        return new RegisterRequest(username, this.email, this.password, this.fullName);
+    }
+}
